@@ -133,7 +133,7 @@ qm create 9000 --name "almalinux-10-template" --memory 2048 --cores 2 --net0 vir
 
 
    ```bash
-   qm importdisk 9000 AlmaLinux-9-GenericCloud-latest.x86_64.qcow2 local-lvm
+   qm disk import 9000 AlmaLinux-9-GenericCloud-latest.x86_64.qcow2 local-lvm
    ```
 
    
