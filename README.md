@@ -323,7 +323,7 @@ Para reducir las operaciones de **I/O**, se ha configurado un disco secundario m
 
  
 
-​     💡   [Ver como el plan para  almacenamiento](section/storage-planning.md)
+​     💡   [Ver la estructura de almacenamiento](section/storage-planning.md)
 
 
 
