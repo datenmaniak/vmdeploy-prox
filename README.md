@@ -393,7 +393,7 @@ Siguiendo estos pasos, tendrás tus 3 VMs nuevas y una plantilla regenerada en `
 
 ---
 
-## ##  Ejecución de comandos QEMU Guest Agent 
+## Ejecución de comandos QEMU Guest Agent 
 
 **Sintaxis:**
 
@@ -407,7 +407,7 @@ Siguiendo estos pasos, tendrás tus 3 VMs nuevas y una plantilla regenerada en `
        shutdown | suspend-disk | suspend-hybrid | suspend-ram>
 ```
 
-#### Listar estadísticas de  la interfaces de red  ( Ver IP DHCP)
+### Listar estadísticas de  la interfaces de red  ( Ver IP DHCP)
 
 ```bash
 qm guest cmd 9100 network-get-interfaces
