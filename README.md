@@ -419,7 +419,7 @@ qm guest cmd 9100 network-get-interfaces [ | grep ip-address ]
 
 
 
-### 💻 Crear Snapshot desde la Línea de Comandos (Vía SSH al Host Proxmox)
+## 💻 Crear Snapshot desde la Línea de Comandos (Vía SSH al Host Proxmox)
 
 1. Conéctate por SSH a tu servidor Proxmox.
 
