@@ -391,9 +391,27 @@ Desde la interfaz web de Proxmox puedes mover el disco de una VM a otro almacena
 
 Siguiendo estos pasos, tendrás tus 3 VMs nuevas y una plantilla regenerada en `/pool`, manteniendo `local-lvm` libre para otros discos de VM.
 
+---
 
+## ##  Ejecución de comandos QEMU Guest Agent 
 
+**Sintaxis:**
 
+```bash
+ qm guest cmd <vmid> <command>
+```
+
+```plainttext
+ <command>: <fsfreeze-freeze | fsfreeze-status | fsfreeze-thaw | fstrim | get-fsinfo | get-host-name | get-memory-block-info
+       | get-memory-blocks | get-osinfo | get-time | get-timezone | get-users | get-vcpus | info | network-get-interfaces | ping |
+       shutdown | suspend-disk | suspend-hybrid | suspend-ram>
+```
+
+#### Listar estadísticas de  la interfaces de red  ( Ver IP DHCP)
+
+```bash
+qm guest cmd 9100 network-get-interfaces
+```
 
 
 
