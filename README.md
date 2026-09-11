@@ -410,7 +410,7 @@ Siguiendo estos pasos, tendrás tus 3 VMs nuevas y una plantilla regenerada en `
 ### Listar estadísticas de  la interfaces de red  ( Ver IP DHCP)
 
 ```bash
-qm guest cmd 9100 network-get-interfaces
+qm guest cmd 9100 network-get-interfaces [ | grep ip-address ]
 ```
 
 
