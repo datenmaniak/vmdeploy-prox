@@ -415,7 +415,56 @@ qm guest cmd 9100 network-get-interfaces [ | grep ip-address ]
 
 
 
+---
 
+
+
+### 💻 Crear Snapshot desde la Línea de Comandos (Vía SSH al Host Proxmox)
+
+1. Conéctate por SSH a tu servidor Proxmox.
+
+2. Lista las VMs para encontrar el **VMID** (primera columna):
+
+  
+
+   ``` bash
+   qm list
+   ```
+
+   
+
+3. Ejecuta el comando de snapshot. Por ejemplo, para la VM con ID `100`:
+
+  
+
+   ```bash
+   qm snapshot 100 pre-practica --description "Estado limpio antes de practicar LVM"
+   ```
+
+   
+
+   - `100` es el VMID.
+   - `pre-practica` es el nombre del snapshot.
+   - `--description` es opcional pero muy útil.
+   - **No añadas** `--vmstate` para un snapshot rápido de solo disco (esto equivale a no marcar "Include RAM" en la web).
+
+### ⏪ Cómo Usarlo (El Rescate)
+
+Si algo sale mal (un error en `/etc/fstab` que impide arrancar, un servicio que no levanta, etc.):
+
+1. **Desde la Web**: Ve a `Snapshots`, selecciona el snapshot que tomaste, pulsa **Rollback** y confirma. La VM se detendrá, revertirá su disco al estado guardado y arrancará de nuevo.
+
+2. **Desde CLI**:
+
+   
+
+   ```bash
+   qm rollback 100 pre-practica
+   ```
+
+   
+
+**Nota Importante**: Un snapshot en Proxmox **no es un backup**. Vive en el mismo almacenamiento que la VM. Es perfecto para "deshacer" cambios rápidos durante tus prácticas, pero no te protege si el disco del servidor Proxmox falla.
 
 
 
