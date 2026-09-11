@@ -118,6 +118,9 @@ Ahora, crearemos una nueva VM que servirá como base para nuestra plantilla. Es 
 
 ```bash
 qm create 9000 --name "almalinux-10-template" --memory 2048 --cores 2 --net0 virtio,bridge=vmbr0
+
+# Importante!
+qm set 9000 --cpu host
 ```
 
 
