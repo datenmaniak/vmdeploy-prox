@@ -498,7 +498,126 @@ La salida mostrará una estructura de árbol con la jerarquía de los snapshots,
 
 
 
+## Error al crear snapshot
 
+
+
+```bash
+qm snapshot 302 pre-practica --description "Reinstalado con 10G/disk"
+snapshot feature is not available
+```
+
+**Por que ocurre esto en una VM recien clonada  en base a Alma Linux.?  **
+
+Este error `"snapshot feature is not available"` no tiene nada que ver con Alma Linux ni con el clonado en sí. Es un mensaje de Proxmox que aparece cuando intenta crear un snapshot pero **el almacenamiento donde reside el disco de la VM no soporta snapshots** o no está configurado correctamente para ello.
+
+### 🔍 ¿Por qué ocurre?
+
+Proxmox verifica que **todos** los discos de una VM estén en un almacenamiento que tenga la funcionalidad de snapshots habilitada. Si uno solo de los discos está en un storage incompatible, la operación completa se rechaza con ese error.
+
+Las causas más comunes son:
+
+**1. El disco está en formato `raw` en lugar de `qcow2`**
+
+Este es el caso más habitual. Para que los snapshots funcionen en almacenamientos de nivel de archivo (como `local` o NFS), el disco debe estar en formato **qcow2**. Si el disco es `raw`, Proxmox no puede tomar snapshots porque ese formato no lo soporta .
+
+Puedes verificarlo con:
+
+
+
+```bash
+qm config 302
+```
+
+
+
+Busca la línea del disco (por ejemplo `scsi0` o `virtio0`). Si ves `format=raw` en lugar de `format=qcow2`, ese es el problema .
+
+**2. El almacenamiento no soporta snapshots**
+
+Algunos tipos de storage simplemente no soportan la funcionalidad, independientemente del formato del disco:
+
+- **LVM (thick)**: no soporta snapshots 
+- **iSCSI/FC con LVM thick**: tampoco 
+- **LVM-thin**: sí soporta snapshots 
+- **ZFS**: sí soporta snapshots 
+- **NFS/CIFS**: solo con discos en qcow2 
+
+**3. En Proxmox VE 9, falta la opción `snapshot-as-volume-chain`**
+
+Si usas LVM thick en Proxmox VE 9, existe una nueva funcionalidad experimental que permite snapshots en este tipo de storage, pero requiere:
+
+- Que la opción `snapshot-as-volume-chain 1` esté presente en `/etc/pve/storage.cfg` 
+- Que el disco esté en formato `qcow2` 
+
+### 🛠️ Cómo solucionarlo
+
+**Opción A: Convertir el disco a qcow2 (la solución más común)**
+
+Si el disco está en formato `raw` y el storage es de nivel de archivo (local, NFS, CIFS), puedes mover el disco al mismo storage pero convirtiéndolo a qcow2:
+
+
+
+```bash
+# Detén la VM primero
+qm stop 302
+
+# Mueve el disco al mismo storage pero en formato qcow2
+qm disk move 302 scsi0 local --format qcow2 --delete
+```
+
+
+
+Reemplaza `scsi0` por el nombre real de tu disco y `local` por el nombre de tu storage .
+
+**Opción B: Mover el disco a un storage que sí soporte snapshots**
+
+Si tu storage actual no soporta snapshots (como LVM thick), puedes mover el disco a **LVM-thin** o **ZFS**, que sí lo hacen de forma nativa :
+
+
+
+```bash
+qm disk move 302 scsi0 lvm-thin --delete
+```
+
+
+
+**Opción C: Si ya estás en Proxmox VE 9 con LVM thick**
+
+Verifica que la opción esté activada en el storage:
+
+
+
+```bash
+cat /etc/pve/storage.cfg
+```
+
+
+
+Deberías ver algo como:
+
+
+
+```text
+lvm: mi-storage
+        vgname vg-datos
+        content images,rootdir
+        snapshot-as-volume-chain 1
+```
+
+Si falta esa línea, actívala con:
+
+```bash
+pvesm set mi-storage --snapshot-as-volume-chain 1
+```
+
+Y asegúrate de que el disco esté en formato `qcow2` .
+
+### ⚠️ Nota importante
+
+Esta funcionalidad de Proxmox VE 9 con `snapshot-as-volume-chain` está marcada como **Technology Preview** y no se recomienda para entornos de producción . Si necesitas snapshots estables, lo más seguro sigue siendo usar **LVM-thin** o **ZFS** como almacenamiento para tus VMs.
+
+Una vez resuelto el formato o el storage, el comando `qm snapshot 302 pre-practica` debería funcionar sin problemas.
 
 
 
