@@ -468,7 +468,33 @@ Si algo sale mal (un error en `/etc/fstab` que impide arrancar, un servicio que 
 
 
 
- 
+## Para listar los snapshots de una máquina virtual (VM)
+
+ En Proxmox, la forma más directa es usando la línea de comandos a través de SSH en el nodo Proxmox.
+
+###  `qm listsnapshot`
+
+El comando `qm listsnapshot` es la herramienta estándar para esta tarea. Necesitas conocer el **ID de la VM** (por ejemplo, 100).
+
+
+
+```bash
+qm listsnapshot <vmid>
+```
+
+
+
+Por ejemplo, para la VM 101:
+
+
+
+```bash
+qm listsnapshot 101
+```
+
+
+
+La salida mostrará una estructura de árbol con la jerarquía de los snapshots, indicando cuál es el estado actual (`current`)
 
 
 
