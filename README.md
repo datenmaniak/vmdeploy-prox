@@ -507,7 +507,7 @@ qm snapshot 302 pre-practica --description "Reinstalado con 10G/disk"
 snapshot feature is not available
 ```
 
-**Por que ocurre esto en una VM recien clonada  en base a Alma Linux.?  **
+#### Por que ocurre esto en una VM recién clonada  en base a Alma Linux.?
 
 Este error `"snapshot feature is not available"` no tiene nada que ver con Alma Linux ni con el clonado en sí. Es un mensaje de Proxmox que aparece cuando intenta crear un snapshot pero **el almacenamiento donde reside el disco de la VM no soporta snapshots** o no está configurado correctamente para ello.
 
